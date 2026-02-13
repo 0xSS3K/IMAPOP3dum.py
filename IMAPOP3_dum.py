@@ -6,7 +6,7 @@ import re
 import shlex
 
 # args
-parser = argparse.ArgumentParser(description="CTF Ultimate Mail Dumper (IMAP/POP3 Auto-Discovery)")
+parser = argparse.ArgumentParser(description="IMAP & POP3 Fast dumper")
 parser.add_argument("protocol", choices=["imap", "pop3"], help="Protocolo a usar: imap o pop3")
 parser.add_argument("host", help="IP o Dominio del servidor")
 parser.add_argument("user", help="Usuario")
@@ -17,17 +17,9 @@ parser.add_argument("--folder", help="Carpeta específica (Solo IMAP). Si se omi
 args = parser.parse_args()
 
 def sanitize_filename(name):
-    """Limpia caracteres inválidos para nombres de archivo/carpeta"""
     return re.sub(r'[<>:"/\\|?*]', '_', name)
 
 def get_imap_folders(mail):
-    """
-    Obtiene la lista de carpetas de forma robusta usando shlex.
-    Funciona con:
-    - "INBOX"
-    - INBOX
-    - "Carpeta Con Espacios"
-    """
     folders = []
     try:
         status, response = mail.list()
@@ -35,7 +27,7 @@ def get_imap_folders(mail):
             print("[!] Error listando carpetas.")
             return []
 
-        print(f"[*] Escaneando estructura de carpetas (Modo Robusto)...")
+        print(f"[*] Escaneando estructura de carpetas...")
         for folder_info in response:
             if not folder_info: continue
             folder_str = folder_info.decode()
@@ -77,7 +69,7 @@ def dump_imap():
             
             status, data = mail.select(f'"{folder}"')
             if status != 'OK':
-                print(f"[!] No se pudo acceder a {folder} (Posiblemente solo lectura o sin permisos). Saltando...")
+                print(f"[!] No se pudo acceder a {folder}. Saltando...")
                 continue
 
             status, messages = mail.search(None, 'ALL')
@@ -105,7 +97,7 @@ def dump_imap():
         print("\n[+] Descarga IMAP completada.")
         
     except Exception as e:
-        print(f"[!] Error Crítico IMAP: {e}")
+        print(f"[!] Error IMAP: {e}")
 
 def dump_pop3():
     port = args.port if args.port else 995
@@ -138,7 +130,7 @@ def dump_pop3():
         print("\n[+] Descarga POP3 completada.")
         
     except Exception as e:
-        print(f"[!] Error Crítico POP3: {e}")
+        print(f"[!] Error POP3: {e}")
 
 if __name__ == "__main__":
     if args.protocol == "imap":
