@@ -1,4 +1,4 @@
-# IMAPOP3dump
+# IMAPOP3dumpy
 Un script en Python ligero y robusto diseñado para la descarga masiva y automatizada de correos electrónicos desde servidores IMAP y POP3.
 
 Esta herramienta fue creada específicamente para agilizar la fase de exfiltración en entornos de CTF y pruebas de penetración, resolviendo la necesidad de enumerar manualmente carpetas o adivinar UIDs de mensajes. Permite obtener el contenido completo de los buzones sin dependencias externas.
